@@ -23,8 +23,8 @@
 
 ## Week :three:
 - FEATURES THAT HAVE BEEN COMPLETED (:heavy_check_mark:)
-  - Validation:heavy_check_mark:
-  - Error Handling for login/signup:heavy_check_mark:
+  - Validation
+  - Error Handling for login/signup
 
 - WORK IN PROGRESS (:heavy_multiplication_x:)
   - Home Page Events Functionality
