@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.myapplication.DestinationScreen
 import com.example.myapplication.IgViewModel
 import com.example.myapplication.R
 
@@ -180,7 +181,8 @@ fun SuccessScreen(navController: NavController, vm: IgViewModel) {
             // Logout Button
             Button(
                 onClick = {
-                    // Handle logout action
+                   vm.logout() // Call the logout function from the ViewModel
+                    navController.navigate(DestinationScreen.Main.route)
 
                 },
                 modifier = Modifier

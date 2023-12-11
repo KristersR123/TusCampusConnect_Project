@@ -52,7 +52,7 @@ import com.example.myapplication.R
 @Composable
 fun LoginScreen(navController: NavController, vm: IgViewModel) {
 
-    val emty by remember { mutableStateOf("") }
+    val empty by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
@@ -116,7 +116,7 @@ fun LoginScreen(navController: NavController, vm: IgViewModel) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_close_24),
                         contentDescription = null,
-                        Modifier.clickable {email = emty}
+                        Modifier.clickable {email = empty}
                     )
                 }
             },
@@ -149,7 +149,7 @@ fun LoginScreen(navController: NavController, vm: IgViewModel) {
         Spacer(modifier = Modifier.height(30.dp))
         if (errorP) {
             Text(
-                text = "Entre Password",
+                text = "Enter Password",
                 color = Color.Red,
                 modifier = Modifier.padding(end = 100.dp)
             )

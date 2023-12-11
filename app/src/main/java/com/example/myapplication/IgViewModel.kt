@@ -61,4 +61,12 @@ class IgViewModel @Inject constructor(
         val message = if (customMessage.isEmpty()) errorMsg else "$customMessage: $errorMsg"
         popupNotification.value = Event(message)
     }
+
+
+    fun logout() {
+        auth.signOut()
+        signedIn.value = false
+    }
+
+
 }
