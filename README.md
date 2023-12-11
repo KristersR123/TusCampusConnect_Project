@@ -23,9 +23,19 @@
 
 ## Week :three:
 - FEATURES THAT HAVE BEEN COMPLETED (:heavy_check_mark:)
-  - Validation
-  - Error Handling for login/signup
+  - Validation:heavy_check_mark:
+  - Error Handling for login/signup:heavy_check_mark:
 
 - WORK IN PROGRESS (:heavy_multiplication_x:)
   - Home Page Events Functionality
+  - Logout
+ 
+## Week :four:
+- FEATURES THAT HAVE BEEN COMPLETED (:heavy_check_mark:)
+  - Logout
+- WORK IN PROGRESS (:heavy_multiplication_x:)
+  - Events
+  - TimeTable
+  - Email
+
  
