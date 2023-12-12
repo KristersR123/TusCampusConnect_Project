@@ -28,4 +28,14 @@
 
 - WORK IN PROGRESS (:heavy_multiplication_x:)
   - Home Page Events Functionality
+  - Logout
+ 
+## Week :four:
+- FEATURES THAT HAVE BEEN COMPLETED (:heavy_check_mark:)
+  - Logout
+- WORK IN PROGRESS (:heavy_multiplication_x:)
+  - Events
+  - TimeTable
+  - Email
+
  
