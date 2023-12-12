@@ -257,7 +257,7 @@ fun LoginScreen(navController: NavController, vm: IgViewModel) {
                 )
             }
             if (vm.signedIn.value){
-                navController.navigate(DestinationScreen.Success.route)
+                navController.navigate(DestinationScreen.Home.route)
             }
             vm.signedIn.value = false
         }
