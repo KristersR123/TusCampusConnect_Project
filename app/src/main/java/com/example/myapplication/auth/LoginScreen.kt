@@ -60,7 +60,7 @@ fun LoginScreen(navController: NavController, vm: IgViewModel) {
     var errorP by remember { mutableStateOf(false) }
 
     Image(
-        painter = painterResource(id = R.drawable.gr),
+        painter = painterResource(id = R.drawable.login_background),
         contentDescription = null,
         contentScale = ContentScale.FillBounds,
         modifier = Modifier.fillMaxSize()

@@ -145,6 +145,11 @@ fun MainScreen(navController: NavController, vm: IgViewModel) {
                     Color.Transparent
                 ),
                 modifier = Modifier.width(300.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xff554800), Color(0xff554800))
+                        )
+                    )
             ) {
                 Text(
                     text = "Sign Up",
@@ -160,7 +165,7 @@ fun MainScreen(navController: NavController, vm: IgViewModel) {
                 .clip(RoundedCornerShape(50.dp))
                 .background(
                     brush = Brush.horizontalGradient(
-                        colors = listOf(Color(0xFFFFD700), Color.White, Color(0xFFFFD700))
+                        colors = listOf(Color(0xFFFFD700), Color(0xFFFFD700))
                     )
                 )
         ) {
@@ -171,9 +176,14 @@ fun MainScreen(navController: NavController, vm: IgViewModel) {
                     Color.Transparent
                 ),
                 modifier = Modifier.width(300.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xff554800), Color(0xff554800))
+                        )
+                    )
             ) {
                 Text(
-                    text = "Log In",
+                    text = "Login",
                     color = Color.Black,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold

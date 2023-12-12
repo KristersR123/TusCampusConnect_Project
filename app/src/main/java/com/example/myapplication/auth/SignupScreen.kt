@@ -66,7 +66,7 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
     var plength by remember { mutableStateOf(false) }
 
     Image(
-        painter = painterResource(id = R.drawable.rd),
+        painter = painterResource(id = R.drawable.login_background),
         contentDescription = null,
         contentScale = ContentScale.FillBounds,
         modifier = Modifier.fillMaxSize()
