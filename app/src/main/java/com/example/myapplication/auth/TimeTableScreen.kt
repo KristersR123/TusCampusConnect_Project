@@ -27,6 +27,7 @@ fun TimeTableScreen(navController: NavController, vm: IgViewModel) {
 
     // Call getTimetable function to fetch data
     val timetableData = remember {
+        // runBlocking is used here to block the main thread temporarily and wait for the result
         runBlocking {
             vm.getTimetable(userId)
         }
