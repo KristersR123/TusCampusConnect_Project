@@ -6,14 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.auth.EventScreen
+import com.example.myapplication.auth.EventViewModel
+
 import com.example.myapplication.auth.HomeScreen
 import com.example.myapplication.auth.LoginScreen
 import com.example.myapplication.auth.MainScreen
@@ -48,12 +49,15 @@ sealed class DestinationScreen(val route: String) {
     object Signup: DestinationScreen("signup")
     object Login: DestinationScreen("login")
     object Home: DestinationScreen("home")
+    object Event: DestinationScreen("event")
+
 }
 
 
 @Composable
 fun AuthenticationApp() {
     val vm = hiltViewModel<IgViewModel>()
+    val viewm = hiltViewModel<EventViewModel>()
     val navController = rememberNavController()
 
     NotificationMessage(vm)
@@ -74,6 +78,14 @@ fun AuthenticationApp() {
         composable(DestinationScreen.Home.route) {
             HomeScreen(navController, vm)
         }
+        composable(DestinationScreen.Event.route) {
+            EventScreen(navController, viewm)
+        }
+
+
+
+
+
     }
 }
 

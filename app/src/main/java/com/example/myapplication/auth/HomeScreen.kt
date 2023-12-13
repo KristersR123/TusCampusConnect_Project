@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.myapplication.DestinationScreen
 import com.example.myapplication.IgViewModel
+
 import com.example.myapplication.R
 
 @Composable
@@ -70,8 +71,7 @@ fun HomeScreen(navController: NavController, vm: IgViewModel) {
             // Buttons are now below the image
             Button(
                 onClick = {
-                    // Handle button click action for "Events"
-                    // Example: viewModel.navigateTo("events")
+                    navController.navigate(DestinationScreen.Event.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
