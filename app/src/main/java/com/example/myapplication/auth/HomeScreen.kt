@@ -106,8 +106,7 @@ fun HomeScreen(navController: NavController, vm: IgViewModel) {
 
             Button(
                 onClick = {
-                    // Handle button click action for "TimeTable"
-                    // Example: viewModel.navigateTo("timetable")
+                    navController.navigate(DestinationScreen.TimeTable.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

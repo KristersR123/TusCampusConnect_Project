@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import TimeTableScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -51,6 +52,8 @@ sealed class DestinationScreen(val route: String) {
     object Home: DestinationScreen("home")
     object Event: DestinationScreen("event")
 
+    object TimeTable: DestinationScreen("timetable")
+
 }
 
 
@@ -80,6 +83,9 @@ fun AuthenticationApp() {
         }
         composable(DestinationScreen.Event.route) {
             EventScreen(navController, viewm)
+        }
+        composable(DestinationScreen.TimeTable.route){
+            TimeTableScreen(navController, vm)
         }
 
 

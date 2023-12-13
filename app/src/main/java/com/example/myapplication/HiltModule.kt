@@ -3,6 +3,7 @@ package com.example.myapplication
 import com.example.myapplication.auth.EventViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
@@ -20,5 +21,11 @@ class HiltModule {
     @Provides
     @ViewModelScoped
     fun provideEventViewModel(): EventViewModel = EventViewModel()
+
+    @Provides
+    @ViewModelScoped
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
 
 }
