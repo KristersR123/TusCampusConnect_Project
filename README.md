@@ -2,10 +2,10 @@
 
 ## Week :one:
 - FEATURES THAT HAVE BEEN COMPLETED (:heavy_check_mark:)
-  - Welcome Screen
-  - Login Screen
-  - Sign Up Screen 
-  - Home Screen
+  - Welcome Screen ✔️
+  - Login Screen ✔️
+  - Sign Up Screen ✔️
+  - Home Screen ✔️
 
 - WORK IN PROGRESS (:heavy_multiplication_x:)
   - Registration and login with firebase authentication
