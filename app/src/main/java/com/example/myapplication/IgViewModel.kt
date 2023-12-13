@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
+import com.example.myapplication.Timetable
 import javax.inject.Inject
 
 
@@ -40,6 +42,9 @@ class IgViewModel @Inject constructor(
                     val userId = result.user?.uid
                     if (userId != null) {
                         storeUserInFirestore(userId, email)
+
+                        // Call the function to store the timetable
+                        storeTimetableInFirestore(userId)
                     }
                 } else {
                     // User creation failed
@@ -70,10 +75,72 @@ class IgViewModel @Inject constructor(
         }
     }
 
+    // Inside IgViewModel class
+    private suspend fun storeTimetableInFirestore(userId: String) {
+        try {
+            // Create a timetable instance (replace this with your actual timetable data)
+            val timetable = Timetable(
+                monday = listOf("Class 1", "Class 2", "Class 3"),
+                tuesday = listOf("Class 1", "Class 2"),
+                wednesday = listOf("Class 1", "Class 2", "Class 3"),
+                thursday = listOf("Class 1", "Class 2"),
+                friday = listOf("Class 1", "Class 2", "Class 3")
+            )
+
+            // Store the timetable in Firestore
+            fireStore.collection("users")
+                .document(userId)
+                .collection("timetables")
+                .document("timetableDocument") // You can use a more specific document ID
+                .set(timetable)
+                .await()
+
+            Log.d(TAG, "Timetable stored in Firestore")
+        } catch (e: Exception) {
+            handleException(e, "Failed to store timetable in Firestore")
+        }
+    }
+
     companion object {
         private const val TAG = "IgViewModel"
     }
 
+    // Inside IgViewModel class
+    suspend fun getTimetable(userId: String): Map<String, List<String>>? {
+        return try {
+            val timetableDocumentSnapshot = fireStore.collection("users")
+                .document(userId)
+                .collection("timetables")
+                .document("timetableDocument")
+                .get()
+                .await()
+
+            if (timetableDocumentSnapshot.exists()) {
+                // Document exists, extract the timetable data
+                val timetableData = timetableDocumentSnapshot.data
+                val monday = timetableData?.get("monday") as? List<String>
+                val tuesday = timetableData?.get("tuesday") as? List<String>
+                val wednesday = timetableData?.get("wednesday") as? List<String>
+                val thursday = timetableData?.get("thursday") as? List<String>
+                val friday = timetableData?.get("friday") as? List<String>
+
+                // Create a map with day names as keys and class lists as values
+                mapOf(
+                    "Monday" to monday.orEmpty(),
+                    "Tuesday" to tuesday.orEmpty(),
+                    "Wednesday" to wednesday.orEmpty(),
+                    "Thursday" to thursday.orEmpty(),
+                    "Friday" to friday.orEmpty()
+                )
+            } else {
+                // Timetable data doesn't exist for the user
+                null
+            }
+        } catch (e: Exception) {
+            handleException(e, "Failed to fetch timetable")
+            null
+        }
+    }
 
     fun login(email: String, pass: String) {
         inProgress.value = true

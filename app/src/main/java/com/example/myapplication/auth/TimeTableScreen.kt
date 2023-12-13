@@ -15,33 +15,42 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.myapplication.IgViewModel
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeTableScreen(navController: NavController, vm: IgViewModel) {
+    // Get the current user ID from Firebase Authentication
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    val userId = currentUser?.uid ?: ""
+
+    // Call getTimetable function to fetch data
     val timetableData = remember {
-        mapOf(
-            "Monday" to listOf(
-                "Advanced Web Techniques 15B25, Carol Rainsford, 9:00am to 11:00am",
-                "Mobile Application Development 1A15, Ita Kavanagh, 11:00am to 1:00pm",
-                "Advanced Web Techniques 15B25, Carol Rainsford, 2:00pm to 4:00pm"
-            ),
-            "Tuesday" to listOf(
-                "Mobile and Web Computing Project 15B26, Suzanne O'Gorman, 9:00am to 11:00am",
-                "Data Structures and Algorithms 15B25, Caroline McAlister, 11:00am to 12:00pm",
-                "Mobile and Web Computing Project 15B25, Suzanne O'Gorman, 1:00pm to 2:00pm",
-                "Concurrent Programming 15B25, Alan Ryan, 2:00pm to 4:00pm"
-            ),
-            "Wednesday" to listOf(
-                "Mobile Application Development 15B25, Ita Kavanagh, 11:00am to 1:00pm",
-                "Concurrent Programming 15B25, Alan Ryan, 4:00pm to 6:00pm"
-            ),
-            "Thursday" to listOf("Free, no class/module"),
-            "Friday" to listOf(
-                "Advanced Web Technique 15B25, Carol Rainsford, 9:00am to 11:00am",
-                "Data Structures and Algorithms 15B25, Caroline McAlister, 11:00am to 1:00pm",
-                "Data Structures and Algorithms 15B25, Caroline McAlister, 1:00pm to 2:00pm"
-            )
+        runBlocking {
+            vm.getTimetable(userId)
+        }
+    }
+
+    // Check if timetableData is not null
+    if (timetableData != null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF7E6E44))
+                .padding(16.dp)
+        ) {
+            // ... (rest of the code for displaying timetable screen)
+
+        }
+    } else {
+        // Show a message or navigate to a different screen indicating no timetable available
+        Text(
+            text = "No timetable available",
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 
@@ -56,17 +65,19 @@ fun TimeTableScreen(navController: NavController, vm: IgViewModel) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            timetableData.forEach { (day, classes) ->
-                item {
-                    Text(text = day, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = 8.dp))
-                }
+            if (timetableData != null) {
+                timetableData.forEach { (day, classes) ->
+                    item {
+                        Text(text = day, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = 8.dp))
+                    }
 
-                items(classes) { clazz ->
-                    Text(text = "- $clazz", modifier = Modifier.padding(start = 16.dp, bottom = 8.dp))
-                }
+                    items(classes) { clazz ->
+                        Text(text = "- $clazz", modifier = Modifier.padding(start = 16.dp, bottom = 8.dp))
+                    }
 
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
             }
 
