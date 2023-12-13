@@ -40,7 +40,7 @@
 
 ## Week :five:
 - FEATURES THAT HAVE BEEN COMPLETED (:heavy_check_mark:)
- - Events
+  - Events ✔️
 -WORK IN PROGRESS (:heavy_multiplication_x:)
  - TimeTable
  - Email
