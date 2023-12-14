@@ -24,19 +24,22 @@ class IgViewModel @Inject constructor(
     private val fireStore: FirebaseFirestore
 ) : ViewModel() {
 
+    // Mutable state variables using Jetpack Compose's mutableStateOf
     val signedIn = mutableStateOf(false)
     val inProgress = mutableStateOf(false)
     val popupNotification = mutableStateOf<com.example.myapplication.Event<String>?>(null)
 
 
+    // Function to handle user signup
     fun onSignup(email: String, pass: String) {
         viewModelScope.launch {
             inProgress.value = true
 
             try {
+                // Create a new user using Firebase authentication
                 val result = auth.createUserWithEmailAndPassword(email, pass).await()
-
                 if (result.user != null) {
+                    // Signup successful, set signedIn to true
                     signedIn.value = true
                     handleException(null, "signup successful")
 
@@ -56,10 +59,50 @@ class IgViewModel @Inject constructor(
                 // Exception occurred during the signup process
                 handleException(e, "signup failed")
             } finally {
+                // Set inProgress to false after signup attempt
                 inProgress.value = false
             }
         }
     }
+
+
+    // Function to handle user login
+    fun login(email: String, pass: String) {
+        inProgress.value = true
+
+        // Sign in using Firebase authentication
+        auth.signInWithEmailAndPassword(email, pass)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    // Login successful, set signedIn to true
+                    signedIn.value = true
+                    handleException(it.exception, "login successful")
+                } else {
+                    // Login failed
+                    handleException(it.exception, "login failed")
+                }
+                // Set inProgress to false after login attempt
+                inProgress.value = false
+            }
+    }
+
+    // Function to handle exceptions and display error messages
+    fun handleException(exception: Exception? = null, customMessage: String = "") {
+        exception?.printStackTrace()
+        val errorMsg = exception?.localizedMessage ?: ""
+        val message = if (customMessage.isEmpty()) errorMsg else "$customMessage: $errorMsg"
+        popupNotification.value = Event(message)
+    }
+
+    // Function to handle user logout
+    fun logout() {
+        auth.signOut()
+        signedIn.value = false
+    }
+
+
+
+    // Function to store user information in Firestore
     private suspend fun storeUserInFirestore(userId: String, email: String, pass: String) {
         try {
             val user = hashMapOf(
@@ -67,6 +110,7 @@ class IgViewModel @Inject constructor(
                 "password" to pass
             )
 
+            // Set user information in Firestore under the "users" collection
             fireStore.collection("users")
                 .document(userId)
                 .set(user)
@@ -78,7 +122,7 @@ class IgViewModel @Inject constructor(
         }
     }
 
-    // Inside IgViewModel class
+    // Function to store timetable information in Firestore
     private suspend fun storeTimetableInFirestore(userId: String) {
         try {
             // Create a timetable instance (replace this with your actual timetable data)
@@ -104,11 +148,8 @@ class IgViewModel @Inject constructor(
         }
     }
 
-    companion object {
-        private const val TAG = "IgViewModel"
-    }
 
-    // Inside IgViewModel class
+    // Function to get timetable data from Firestore
     suspend fun getTimetable(userId: String): Map<String, List<String>>? {
         return try {
             val timetableDocumentSnapshot = fireStore.collection("users")
@@ -145,10 +186,16 @@ class IgViewModel @Inject constructor(
         }
     }
 
+
+
+
+    // Mutable state variables for user contact information
     var userName by mutableStateOf("")
     var userEmail by mutableStateOf("")
     var userMessage by mutableStateOf("")
 
+
+    // Function to store contact information in Firestore
     suspend fun storeContactInFirestore(name: String, email: String, message: String) {
         try {
             val contact = hashMapOf(
@@ -157,6 +204,7 @@ class IgViewModel @Inject constructor(
                 "message" to message
             )
 
+            // Store contact information in Firestore under the "contacts" collection
             fireStore.collection("contacts")
                 .add(contact)
                 .await()
@@ -168,37 +216,11 @@ class IgViewModel @Inject constructor(
     }
 
 
-
-
-
-    fun login(email: String, pass: String) {
-        inProgress.value = true
-
-        auth.signInWithEmailAndPassword(email, pass)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    signedIn.value = true
-                    handleException(it.exception, "login successful")
-                } else {
-                    handleException(it.exception, "login failed")
-                }
-                inProgress.value = false
-            }
+    companion object {
+        private const val TAG = "IgViewModel"
     }
 
 
-    fun handleException(exception: Exception? = null, customMessage: String = "") {
-        exception?.printStackTrace()
-        val errorMsg = exception?.localizedMessage ?: ""
-        val message = if (customMessage.isEmpty()) errorMsg else "$customMessage: $errorMsg"
-        popupNotification.value = Event(message)
-    }
-
-
-    fun logout() {
-        auth.signOut()
-        signedIn.value = false
-    }
 
 
 }
