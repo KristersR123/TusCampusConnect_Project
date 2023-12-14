@@ -18,6 +18,8 @@ import com.example.myapplication.Timetable
 import javax.inject.Inject
 
 
+// got help from -> about login/register. W L PROJECT - FIREBASE LOGIN/REGISTER: https://www.youtube.com/watch?v=ti6Ci0s4SD8&ab_channel=WLPROJECT
+
 @HiltViewModel
 class IgViewModel @Inject constructor(
     val auth: FirebaseAuth,
