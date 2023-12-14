@@ -2,7 +2,9 @@ package com.example.myapplication
 
 import android.app.usage.UsageEvents.Event
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -41,7 +43,7 @@ class IgViewModel @Inject constructor(
                     // Store user information in Firestore
                     val userId = result.user?.uid
                     if (userId != null) {
-                        storeUserInFirestore(userId, email)
+                        storeUserInFirestore(userId, email,pass)
 
                         // Call the function to store the timetable
                         storeTimetableInFirestore(userId)
@@ -58,10 +60,11 @@ class IgViewModel @Inject constructor(
             }
         }
     }
-    private suspend fun storeUserInFirestore(userId: String, email: String) {
+    private suspend fun storeUserInFirestore(userId: String, email: String, pass: String) {
         try {
             val user = hashMapOf(
-                "email" to email
+                "email" to email,
+                "password" to pass
             )
 
             fireStore.collection("users")
@@ -69,9 +72,9 @@ class IgViewModel @Inject constructor(
                 .set(user)
                 .await()
 
-            Log.d(TAG, "User information stored in Firestore")
+            Log.d(TAG, "User information (included password) stored in Firestore")
         } catch (e: Exception) {
-            handleException(e, "Failed to store user information in Firestore")
+            handleException(e, "Failed to store user information (included password) in Firestore")
         }
     }
 
@@ -141,6 +144,32 @@ class IgViewModel @Inject constructor(
             null
         }
     }
+
+    var userName by mutableStateOf("")
+    var userEmail by mutableStateOf("")
+    var userMessage by mutableStateOf("")
+
+    suspend fun storeContactInFirestore(name: String, email: String, message: String) {
+        try {
+            val contact = hashMapOf(
+                "name" to name,
+                "email" to email,
+                "message" to message
+            )
+
+            fireStore.collection("contacts")
+                .add(contact)
+                .await()
+
+            Log.d(TAG, "Contact information stored in Firestore")
+        } catch (e: Exception) {
+            handleException(e, "Failed to store contact information in Firestore")
+        }
+    }
+
+
+
+
 
     fun login(email: String, pass: String) {
         inProgress.value = true

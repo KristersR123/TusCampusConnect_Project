@@ -16,10 +16,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -44,7 +46,7 @@ fun HomeScreen(navController: NavController, vm: IgViewModel) {
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.tus_image), // Replace with your actual image resource ID
+            painter = painterResource(id = R.drawable.tus_image),
             contentDescription = "TUS Campus Image",
             modifier = Modifier
                 .width(440.dp)
@@ -68,7 +70,7 @@ fun HomeScreen(navController: NavController, vm: IgViewModel) {
 
             Spacer(modifier = Modifier.height(400.dp))
 
-            // Buttons are now below the image
+
             Button(
                 onClick = {
                     navController.navigate(DestinationScreen.Event.route)
@@ -141,8 +143,7 @@ fun HomeScreen(navController: NavController, vm: IgViewModel) {
 
             Button(
                 onClick = {
-                    // Handle button click action for "Email"
-                    // Example: viewModel.navigateTo("email")
+                    navController.navigate(DestinationScreen.Contact.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -159,7 +160,7 @@ fun HomeScreen(navController: NavController, vm: IgViewModel) {
                 )
             ) {
                 Text(
-                    text = "Email",
+                    text = "Contact Us",
                     textAlign = TextAlign.Center,
                     fontSize = 25.sp,
                     textDecoration = TextDecoration.None,
@@ -175,40 +176,41 @@ fun HomeScreen(navController: NavController, vm: IgViewModel) {
 
             Spacer(modifier = Modifier.height(100.dp))
 
-            // Logout Button
-            Button(
-                onClick = {
-                   vm.logout() // Call the logout function from the ViewModel
-                    navController.navigate(DestinationScreen.Main.route)
-
-                },
+            // Back Button
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(37.dp)
-                    .shadow(1.dp, shape = RoundedCornerShape(4.dp)),
-                contentPadding = PaddingValues(),
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(
-                        red = 0.02916666679084301f,
-                        green = 0.028315972536802292f,
-                        blue = 0.028315972536802292f,
-                        alpha = 1f
+                    .clip(RoundedCornerShape(50.dp))
+                    .align(Alignment.CenterHorizontally)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xFFFFD700), Color(0xFFFFD700))
+                        )
                     )
-                )
             ) {
-                Text(
-                    text = "Logout",
-                    textAlign = TextAlign.Center,
-                    fontSize = 25.sp,
-                    textDecoration = TextDecoration.None,
-                    letterSpacing = 0.sp,
-                    overflow = TextOverflow.Ellipsis,
+                Button(
+                    onClick = {
+                        vm.logout()
+                        navController.navigate(DestinationScreen.Main.route)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        Color.Transparent
+                    ),
                     modifier = Modifier
-                        .fillMaxSize()
-                        .alpha(1f),
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Normal,
-                )
+                        .width(300.dp)
+                        .align(Alignment.Center)
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(Color(0xff554800), Color(0xff554800))
+                            )
+                        )
+                ) {
+                    Text(
+                        text = "Logout",
+                        color = Color.Black,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }

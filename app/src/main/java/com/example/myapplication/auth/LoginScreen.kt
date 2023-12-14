@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -223,7 +224,9 @@ fun LoginScreen(navController: NavController, vm: IgViewModel) {
             modifier = Modifier
                 .clip(RoundedCornerShape(50.dp))
                 .background(
-                    color = Color.White
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(Color(0xFFFFD700), Color(0xFFFFD700))
+                    )
                 )
         ) {
             Button(onClick = {
@@ -248,9 +251,14 @@ fun LoginScreen(navController: NavController, vm: IgViewModel) {
                     Color.Transparent
                 ),
                 modifier = Modifier.width(200.dp)
+                    .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(Color(0xff554800), Color(0xff554800))
+                    )
+                )
             ) {
                 Text(
-                    text = "Sign Up",
+                    text = "Login",
                     color = Color.Black,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
@@ -260,6 +268,40 @@ fun LoginScreen(navController: NavController, vm: IgViewModel) {
                 navController.navigate(DestinationScreen.Home.route)
             }
             vm.signedIn.value = false
+        }
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(50.dp))
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(Color(0xFFFFD700), Color(0xFFFFD700))
+                    )
+                )
+        ) {
+            Button(
+                onClick = {
+                    navController.popBackStack()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    Color.Transparent
+                ),
+                modifier = Modifier
+                    .width(300.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xff554800), Color(0xff554800))
+                        )
+                    )
+            ) {
+                Text(
+                    text = "Back",
+                    color = Color.Black,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

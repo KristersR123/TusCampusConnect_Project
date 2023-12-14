@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -16,6 +17,7 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +25,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -81,7 +84,7 @@ fun EventScreen(navController: NavController, vm: EventViewModel) {
                     if (!eventName.isBlank() && eventDate != null) {
                         // Format the date if needed
                         val formattedDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(eventDate!!)
-                        // Do something with the event details, e.g., pass them to ViewModel
+                        // Do something with the event details,  pass them to ViewModel
                         vm.addEvent(eventName, formattedDate)
                         // Reset the fields
                         eventName = ""
@@ -119,6 +122,40 @@ fun EventScreen(navController: NavController, vm: EventViewModel) {
                 ) {
                     Text(text = "Event: $name")
                     Text(text = "Date: $date")
+                }
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50.dp))
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xFFFFD700), Color(0xFFFFD700))
+                        )
+                    )
+            ) {
+                Button(
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        Color.Transparent
+                    ),
+                    modifier = Modifier
+                        .width(300.dp)
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(Color(0xff554800), Color(0xff554800))
+                            )
+                        )
+                ) {
+                    Text(
+                        text = "Back",
+                        color = Color.Black,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }

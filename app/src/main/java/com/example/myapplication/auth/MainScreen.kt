@@ -45,7 +45,7 @@ fun MainScreen(navController: NavController, vm: IgViewModel) {
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.tus_image), // Replace with your actual image resource ID
+            painter = painterResource(id = R.drawable.tus_image),
             contentDescription = "TUS Campus Image",
             modifier = Modifier
                 .width(440.dp)
