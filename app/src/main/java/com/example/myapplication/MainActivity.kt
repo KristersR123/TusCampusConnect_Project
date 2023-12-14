@@ -46,31 +46,36 @@ class MainActivity : ComponentActivity() {
 }
 
 
+// Sealed class representing different destination screens with their respective routes
 sealed class DestinationScreen(val route: String) {
     object Main: DestinationScreen("main")
     object Signup: DestinationScreen("signup")
     object Login: DestinationScreen("login")
     object Home: DestinationScreen("home")
     object Event: DestinationScreen("event")
-
     object TimeTable: DestinationScreen("timetable")
     object Contact: DestinationScreen("contact")
-
 }
 
-
+// Composable function for the main authentication app
 @Composable
 fun AuthenticationApp() {
+    // Obtain instances of view models using Hilt
     val vm = hiltViewModel<IgViewModel>()
     val viewm = hiltViewModel<EventViewModel>()
+
+    // Create a NavController to manage navigation within the app
     val navController = rememberNavController()
 
+    // Display notifications using the NotificationMessage composable
     NotificationMessage(vm)
 
+    // Set up the navigation graph using NavHost
     NavHost(
         navController = navController,
         startDestination = DestinationScreen.Main.route
     ) {
+        // Define composable functions for each destination screen
         composable(DestinationScreen.Main.route) {
             MainScreen(navController, vm)
         }
@@ -92,7 +97,6 @@ fun AuthenticationApp() {
         composable(DestinationScreen.Contact.route){
             ContactUsScreen(navController, vm)
         }
-
 
 
 
