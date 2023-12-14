@@ -42,7 +42,14 @@
 - FEATURES THAT HAVE BEEN COMPLETED (:heavy_check_mark:)
   - Events ✔️
 - WORK IN PROGRESS (:heavy_multiplication_x:)
-  - TimeTable
-  - Email
+  - TimeTable working with FireStore to fetch data
+  - Email (took out email functionality as no time left and i got told from the begining to just maybe have two functionalities)
+ 
+## Week :six:
+- FEATURES THAT HAVE BEEN COMPLETED(:heavy_check_mark:)
+  - TimeTable working with Firestore database to fetch data. ✔️
+  - Working Events (a little buggy but its okay) ✔️
+- WORK IN PROGRESS (:heavy_multiplication_x:)
+  - Contact Us
 
  
