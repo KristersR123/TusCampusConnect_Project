@@ -46,7 +46,7 @@ fun HomeScreen(navController: NavController, vm: IgViewModel) {
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.tus_image),
+            painter = painterResource(id = R.drawable.tus_image), // image used from. https://www.facebook.com/photo/?fbid=4665632226793991&set=ecnf.100071852273842
             contentDescription = "TUS Campus Image",
             modifier = Modifier
                 .width(440.dp)
