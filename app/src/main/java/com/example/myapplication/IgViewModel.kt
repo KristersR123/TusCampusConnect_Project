@@ -118,7 +118,7 @@ class IgViewModel @Inject constructor(
                 .set(user)
                 .await()
 
-            Log.d(TAG, "User information (included password) stored in Firestore")
+
         } catch (e: Exception) {
             handleException(e, "Failed to store user information (included password) in Firestore")
         }
@@ -144,7 +144,6 @@ class IgViewModel @Inject constructor(
                 .set(timetable)
                 .await()
 
-            Log.d(TAG, "Timetable stored in Firestore")
         } catch (e: Exception) {
             handleException(e, "Failed to store timetable in Firestore")
         }
@@ -211,16 +210,11 @@ class IgViewModel @Inject constructor(
                 .add(contact)
                 .await()
 
-            Log.d(TAG, "Contact information stored in Firestore")
         } catch (e: Exception) {
             handleException(e, "Failed to store contact information in Firestore")
         }
     }
 
-
-    companion object {
-        private const val TAG = "IgViewModel"
-    }
 
 
 
