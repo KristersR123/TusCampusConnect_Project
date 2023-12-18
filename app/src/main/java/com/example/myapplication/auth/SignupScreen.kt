@@ -3,26 +3,36 @@ package com.example.myapplication.auth
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +53,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -54,7 +63,7 @@ import com.example.myapplication.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(navController: NavController, vm: IgViewModel) {
-    val emty by remember { mutableStateOf("") }
+    val empty by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var cpassword by remember { mutableStateOf("") }
@@ -65,6 +74,9 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
     var errorCP by remember { mutableStateOf(false) }
     var errorC by remember { mutableStateOf(false) }
     var plength by remember { mutableStateOf(false) }
+    val courses = listOf("Internet Systems Development", "Software Development")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedCourse by remember { mutableStateOf(courses.first()) }
 
     Image(
         painter = painterResource(id = R.drawable.login_background),
@@ -77,7 +89,7 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (vm.inProgress.value){
+        if (vm.inProgress.value) {
             CircularProgressIndicator()
         }
     }
@@ -102,7 +114,7 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
                 text = "Enter email",
                 color = Color.Red,
                 modifier = Modifier.padding(end = 100.dp)
-                )
+            )
         }
         TextField(
             value = email,
@@ -123,7 +135,7 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_close_24),
                         contentDescription = null,
-                        Modifier.clickable {email = emty}
+                        Modifier.clickable { email = empty }
                     )
                 }
             },
@@ -187,8 +199,7 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
                 if (password.isNotEmpty()) {
                     val visibilityIcon = if (passwordVisibility) {
                         painterResource(id = R.drawable.baseline_visibility_24)
-                    }
-                    else{
+                    } else {
                         painterResource(id = R.drawable.baseline_visibility_off_24)
                     }
                     Icon(
@@ -202,8 +213,7 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
             },
             visualTransformation = if (passwordVisibility) {
                 VisualTransformation.None
-            }
-            else {
+            } else {
                 PasswordVisualTransformation()
             },
             keyboardOptions = KeyboardOptions(
@@ -234,14 +244,14 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
             )
         )
         Spacer(modifier = Modifier.height(30.dp))
-        if (errorCP){
+        if (errorCP) {
             Text(
-                text = "Password Doesnt Match",
+                text = "Password Doesn't Match",
                 color = Color.Red,
                 modifier = Modifier.padding(end = 100.dp)
-                )
+            )
         }
-        if (errorC){
+        if (errorC) {
             Text(
                 text = "Please Confirm Password",
                 color = Color.Red,
@@ -263,26 +273,24 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
                 )
             },
             trailingIcon = {
-               if (cpassword.isNotEmpty()) {
-                   val visibilityIcon = if (cpasswordVisibility) {
-                       painterResource(id = R.drawable.baseline_visibility_24)
-                   }
-                   else{
-                       painterResource(id = R.drawable.baseline_visibility_off_24)
-                   }
-                   Icon(
-                       painter = visibilityIcon,
-                       contentDescription = if (cpasswordVisibility) "Hide Password" else "Show Password",
-                       Modifier.clickable {
-                           cpasswordVisibility = !cpasswordVisibility
-                       }
-                   )
-               }
+                if (cpassword.isNotEmpty()) {
+                    val visibilityIcon = if (cpasswordVisibility) {
+                        painterResource(id = R.drawable.baseline_visibility_24)
+                    } else {
+                        painterResource(id = R.drawable.baseline_visibility_off_24)
+                    }
+                    Icon(
+                        painter = visibilityIcon,
+                        contentDescription = if (cpasswordVisibility) "Hide Password" else "Show Password",
+                        Modifier.clickable {
+                            cpasswordVisibility = !cpasswordVisibility
+                        }
+                    )
+                }
             },
             visualTransformation = if (cpasswordVisibility) {
                 VisualTransformation.None
-            }
-            else {
+            } else {
                 PasswordVisualTransformation()
             },
             keyboardOptions = KeyboardOptions(
@@ -312,6 +320,49 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
                 unfocusedTrailingIconColor = Color.White
             )
         )
+        // Dropdown menu for selecting courses
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            courses.forEach { course ->
+                DropdownMenuItem(onClick = {
+                    selectedCourse = course
+                    expanded = false
+                }) {
+                    Text(text = course)
+                }
+            }
+        }
+        // OutlinedTextField for displaying the selected course
+        OutlinedTextField(
+            value = selectedCourse,
+            onValueChange = { /* Handle changes if necessary */ },
+            label = { Text("Course") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            readOnly = true, // Make the field read-only
+            trailingIcon = {
+                if (selectedCourse.isNotEmpty()) {
+                    IconButton(
+                        onClick = {
+                            expanded = true
+                        },
+                        modifier = Modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { }
+                    ) {
+                        Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
+                    }
+                }
+            }
+        )
+
         Spacer(modifier = Modifier.height(50.dp))
         Box(
             modifier = Modifier
@@ -322,54 +373,52 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
                     )
                 )
         ) {
-            Button(onClick = {
-                if (email.isNotEmpty()) {
-                    errorE = false
-                    if (password.isNotEmpty()) {
-                        errorP = false
-                        if (cpassword.isNotEmpty()) {
-                            errorC = false
-                            if (password == cpassword) {
-                                errorCP = false
-                                vm.onSignup(
-                                    email,
-                                    password
-                                )
+            Button(
+                onClick = {
+                    if (email.isNotEmpty()) {
+                        errorE = false
+                        if (password.isNotEmpty()) {
+                            errorP = false
+                            if (cpassword.isNotEmpty()) {
+                                errorC = false
+                                if (password == cpassword) {
+                                    errorCP = false
+                                    vm.onSignup(
+                                        email,
+                                        password,
+                                        selectedCourse
+                                    )
+                                } else {
+                                    errorCP = true
+                                }
+                            } else {
+                                errorC = true
                             }
-                            else {
-                                errorCP = true
-                            }
+                        } else {
+                            errorP = true
                         }
-                        else {
-                            errorC = true
-                        }
+                    } else {
+                        errorE = true
                     }
-                    else {
-                        errorP = true
-                    }
-                }
-                else {
-                    errorE = true
-                }
-            },
+                },
                 colors = ButtonDefaults.buttonColors(
                     Color.Transparent
                 ),
                 modifier = Modifier.width(200.dp)
                     .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(Color(0xff554800), Color(0xff554800))
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xff554800), Color(0xff554800))
+                        )
                     )
-                )
             ) {
                 Text(
                     text = "Sign Up",
                     color = Color.Black,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
-                    )
+                )
             }
-            if (vm.signedIn.value){
+            if (vm.signedIn.value) {
                 navController.navigate(DestinationScreen.Home.route)
             }
             vm.signedIn.value = false
@@ -411,4 +460,19 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
     }
 }
 
-
+@Composable
+fun DropdownMenuItem(
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            }
+            .background(color = Color.White) // You can customize the background color
+    ) {
+        content()
+    }
+}

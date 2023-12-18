@@ -30,34 +30,20 @@ fun TimeTableScreen(navController: NavController, vm: IgViewModel) {
     val currentUser = FirebaseAuth.getInstance().currentUser
     val userId = currentUser?.uid ?: ""
 
-    // Call getTimetable function to fetch data
-    val timetableData = remember {
-        // runBlocking is used here to block the main thread temporarily and wait for the result
+
+
+    // Fetch selected course from Firestore
+    val selectedCourse = remember {
         runBlocking {
-            vm.getTimetable(userId)
+            vm.getCourse(userId)
         }
     }
 
-    // Check if timetableData is not null
-    if (timetableData != null) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFF7E6E44))
-                .padding(16.dp)
-        ) {
-            // ... (rest of the code for displaying timetable screen)
-
+    // Call getTimetable function to fetch data based on the selected course
+    val timetableData = remember {
+        runBlocking {
+            vm.getTimetable(userId, selectedCourse.orEmpty())
         }
-    } else {
-        // Show a message or navigate to a different screen indicating no timetable available
-        Text(
-            text = "No timetable available",
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
 
     Box(
@@ -74,7 +60,11 @@ fun TimeTableScreen(navController: NavController, vm: IgViewModel) {
             if (timetableData != null) {
                 timetableData.forEach { (day, classes) ->
                     item {
-                        Text(text = day, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = 8.dp))
+                        Text(
+                            text = day,
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
                     }
 
                     items(classes) { clazz ->

@@ -20,6 +20,8 @@ import javax.inject.Inject
 
 // got help from -> about login/register. W L PROJECT - FIREBASE LOGIN/REGISTER: https://www.youtube.com/watch?v=ti6Ci0s4SD8&ab_channel=WLPROJECT
 
+
+
 @HiltViewModel
 class IgViewModel @Inject constructor(
     val auth: FirebaseAuth,
@@ -33,7 +35,7 @@ class IgViewModel @Inject constructor(
 
 
     // Function to handle user signup
-    fun onSignup(email: String, pass: String) {
+    fun onSignup(email: String, pass: String, course: String) {
         viewModelScope.launch {
             inProgress.value = true
 
@@ -48,10 +50,10 @@ class IgViewModel @Inject constructor(
                     // Store user information in Firestore
                     val userId = result.user?.uid
                     if (userId != null) {
-                        storeUserInFirestore(userId, email,pass)
+                        storeUserInFirestore(userId, email, pass, course)
 
                         // Call the function to store the timetable
-                        storeTimetableInFirestore(userId)
+                        storeTimetableInFirestore(userId, course)
                     }
                 } else {
                     // User creation failed
@@ -105,11 +107,12 @@ class IgViewModel @Inject constructor(
 
 
     // Function to store user information in Firestore
-    private suspend fun storeUserInFirestore(userId: String, email: String, pass: String) {
+    private suspend fun storeUserInFirestore(userId: String, email: String, pass: String, course: String) {
         try {
             val user = hashMapOf(
                 "email" to email,
-                "password" to pass
+                "password" to pass,
+                "course" to course // Add the course information
             )
 
             // Set user information in Firestore under the "users" collection
@@ -118,6 +121,8 @@ class IgViewModel @Inject constructor(
                 .set(user)
                 .await()
 
+            // Call the function to store the timetable
+            storeTimetableInFirestore(userId, course)
 
         } catch (e: Exception) {
             handleException(e, "Failed to store user information (included password) in Firestore")
@@ -125,38 +130,132 @@ class IgViewModel @Inject constructor(
     }
 
     // Function to store timetable information in Firestore
-    private suspend fun storeTimetableInFirestore(userId: String) {
+    private suspend fun storeTimetableInFirestore(userId: String, course: String) {
         try {
-            // Create a timetable instance (replace this with your actual timetable data)
+            val mondayClasses = when (course) {
+                "Internet Systems Development" -> listOf(
+                    "Advanced Web Techniques 15B25, Carol Rainsford, 9:00AM - 11:00AM",
+                    "Mobile Application Development 1A15, Ita Kavanagh, 11:00AM - 1:00PM",
+                    "Advanced Web Techniques 15B25, Carol Rainsford, 2:00PM - 4:00PM")
+
+
+                "Software Development" -> listOf(
+                    "Applications Programming 3B04, Alan Ryan, 12:00PM - 1:00PM",
+                    "Secure Web App Development 1A15, Sharon Byrne, 2:00PM - 4:00PM",
+                    "Applications Programming 8A106, Alan Ryan, 4:00PM - 6:00PM")
+                else -> emptyList()
+            }
+
+            val tuesdayClasses = when (course) {
+                "Internet Systems Development" -> listOf(
+                    "Mobile and Web Computing Project 15B26, Suzanne O'Gorman, 9:00AM - 11:00AM",
+                    "Data Structures and Algorithms 15B25, Caroline McAlister, 11:00AM - 1:00PM",
+                    "Mobile and Web Computing Project 15B25, Suzanne O'Gorman, 1:00PM - 2:00PM",
+                    "Concurrent Programming 15B25, Alan Ryan, 2:00PM - 4:00PM")
+
+
+
+                "Software Development" -> listOf(
+                    "Computer Science 3B03, James Fennell, 9:00AM - 11:00AM",
+                    "Computer Science 1A17, James Fennell, 11:00AM - 12:00AM",
+                    "Object Modelling and Design 3B05, Brendan Watson, 1:00PM - 2:00PM",
+                    "Sd3 - Software Development Group Project(1Hr) 8A106, Des O'Carroll, 2:00PM - 4:00PM")
+                else -> emptyList()
+            }
+
+            val wednesdayClasses = when (course) {
+                "Internet Systems Development" -> listOf(
+                    "Mobile Application Development 1A15, Ita Kavanagh, 11:00AM - 1:00PM",
+                    "Concurrent Programming 15B25, Alan Ryan, 4:00PM - 6:00PM")
+
+
+
+                "Software Development" -> listOf(
+                    "Secure Web App Development 1A16, Sharon Byrne, 9:00AM - 11:00AM",
+                    "Application Programming 8A106, Alan Ryan, 11:00AM - 1:00PM",
+                    "Object Modelling and Design 3B04, Brendan Watson, 2:00PM - 4:00PM")
+                else -> emptyList()
+            }
+
+            val thursdayClasses = when (course) {
+                "Internet Systems Development" -> listOf(
+                    "Off")
+
+
+
+                "Software Development" -> listOf(
+                    "Object Modelling and Design 8A106, Brendan Watson, 9:00AM - 11:00AM",
+                    "Sd3 - Software Development Group Project(1Hr) 8A106, William Ward, 1:00PM - 2:00PM",
+                    "Computer Science 3B05, James Fennell, 4:00PM - 5:00PM")
+                else -> emptyList()
+            }
+
+            val fridayClasses = when (course) {
+                "Internet Systems Development" -> listOf(
+                    "Advanced Web Techniques 15B25, Carol Rainsford, 9:00AM - 11:00AM",
+                    "Data Structures and Algorithms 15B25, Caroline McAlister, 11:00AM - 1:00PM",
+                    "Data Structures and Algorithms 15B25, Caroline McAlister, 1:00PM - 2:00PM")
+
+
+
+                "Software Development" -> listOf("Off")
+                else -> emptyList()
+            }
+
+
+
+
+            // Create a timetable instance
             val timetable = Timetable(
-                monday = listOf("Class 1", "Class 2", "Class 3"),
-                tuesday = listOf("Class 1", "Class 2"),
-                wednesday = listOf("Class 1", "Class 2", "Class 3"),
-                thursday = listOf("Class 1", "Class 2"),
-                friday = listOf("Class 1", "Class 2", "Class 3")
+                monday = mondayClasses,
+                tuesday = tuesdayClasses,
+                wednesday = wednesdayClasses,
+                thursday = thursdayClasses,
+                friday = fridayClasses
+                // Repeat for other days
             )
 
             // Store the timetable in Firestore
             fireStore.collection("users")
                 .document(userId)
                 .collection("timetables")
-                .document("timetableDocument") // You can use a more specific document ID
+                .document(course)
                 .set(timetable)
                 .await()
-
         } catch (e: Exception) {
             handleException(e, "Failed to store timetable in Firestore")
         }
     }
 
 
-    // Function to get timetable data from Firestore
-    suspend fun getTimetable(userId: String): Map<String, List<String>>? {
+    // Function to get the selected course from Firestore
+    suspend fun getCourse(userId: String): String? {
+        return try {
+            val userDocumentSnapshot = fireStore.collection("users")
+                .document(userId)
+                .get()
+                .await()
+
+            if (userDocumentSnapshot.exists()) {
+                val userData = userDocumentSnapshot.data
+                userData?.get("course") as? String
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            handleException(e, "Failed to fetch user course")
+            null
+        }
+    }
+
+
+    // Function to get timetable data from Firestore based on the selected course
+    suspend fun getTimetable(userId: String, course: String): Map<String, List<String>>? {
         return try {
             val timetableDocumentSnapshot = fireStore.collection("users")
                 .document(userId)
                 .collection("timetables")
-                .document("timetableDocument")
+                .document(course)
                 .get()
                 .await()
 
@@ -186,6 +285,7 @@ class IgViewModel @Inject constructor(
             null
         }
     }
+
 
 
 
