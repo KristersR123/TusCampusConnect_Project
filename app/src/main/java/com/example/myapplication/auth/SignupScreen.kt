@@ -346,6 +346,12 @@ fun SignupScreen(navController: NavController, vm: IgViewModel) {
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             readOnly = true, // Make the field read-only
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.White, // Set text color
+                cursorColor = Color.Red,
+                focusedBorderColor = Color.White,
+                unfocusedBorderColor = Color.White,
+            ),
             trailingIcon = {
                 if (selectedCourse.isNotEmpty()) {
                     IconButton(
