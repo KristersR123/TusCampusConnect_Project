@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -56,19 +57,48 @@ fun TimeTableScreen(navController: NavController, vm: IgViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-        ) {
+        )
+
+        {
+
+            item {
+                Text(
+                    text = selectedCourse ?: "No Course Selected",
+                    style = MaterialTheme.typography.headlineLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    color = Color.White
+                )
+            }
+
             if (timetableData != null) {
                 timetableData.forEach { (day, classes) ->
+
                     item {
-                        Text(
-                            text = day,
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = day,
+                                style = MaterialTheme.typography.headlineSmall,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
                     }
 
                     items(classes) { clazz ->
-                        Text(text = "- $clazz", modifier = Modifier.padding(start = 16.dp, bottom = 8.dp))
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 16.dp, bottom = 8.dp)
+                                .border(1.dp, Color.Black) // Set border color here
+                                .background(Color.White) // Set background color here
+                        ) {
+                            Text(text = clazz, modifier = Modifier.padding(8.dp))
+                        }
                     }
 
                     item {
