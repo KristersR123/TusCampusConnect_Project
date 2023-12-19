@@ -15,38 +15,48 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EventViewModel @Inject constructor() : ViewModel() {
+    // Firebase Authentication instance
     val auth = FirebaseAuth.getInstance()
+
+    // User ID of the current user
     private var userId: String? = null
 
+    // Reference to the user's document in Firestore
     private val userDocument: DocumentReference?
         get() = userId?.let {
             FirebaseFirestore.getInstance().collection("users").document(it)
         }
 
+    // Reference to the collection of events for the current user
     private val eventsCollection: CollectionReference?
         get() = userDocument?.collection("events")
 
+    // MutableStateFlow to hold the list of events
     private val _events = MutableStateFlow(emptyList<Pair<String, String>>())
     val events: StateFlow<List<Pair<String, String>>> = _events
 
     init {
+        // Initialize the ViewModel by getting the user ID and starting to listen for events
         getUserId()
         startListeningForEvents()
     }
 
+    // Get the current user's ID
     private fun getUserId() {
         userId = FirebaseAuth.getInstance().currentUser?.uid
     }
 
+    // Start listening for changes in the events collection for the current user
     private fun startListeningForEvents() {
         userId?.let { uid ->
-            eventsCollection?.whereEqualTo("userId", uid)?.addSnapshotListener { snapshot, error ->
-                // ...
+            eventsCollection?.addSnapshotListener { snapshot, error ->
+                // Handle errors during snapshot listening
                 if (error != null) {
                     // Handle error
                     return@addSnapshotListener
                 }
 
+                // Parse the snapshot and update the list of events
                 val updatedEvents = snapshot?.documents?.mapNotNull {
                     val eventName = it["eventName"] as? String
                     val eventDateTime = it["eventDateTime"] as? String
@@ -57,16 +67,17 @@ class EventViewModel @Inject constructor() : ViewModel() {
                     }
                 } ?: emptyList()
 
-                // Update the state
+                // Update the state with the new list of events
                 _events.value = updatedEvents
             }
         }
     }
 
+    // Add a new event for the current user
     fun addEvent(eventName: String, eventDateTime: String) {
         val newEvent = Pair(eventName, eventDateTime)
 
-        // Add the event directly to the user's document
+        // Add the event directly to the user's document in Firestore
         userId?.let { uid ->
             userDocument?.collection("events")?.add(
                 mapOf(
