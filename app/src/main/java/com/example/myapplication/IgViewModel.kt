@@ -1,7 +1,5 @@
 package com.example.myapplication
 
-import android.app.usage.UsageEvents.Event
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,12 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
-import com.example.myapplication.Timetable
 import javax.inject.Inject
 
 
@@ -103,6 +99,8 @@ class IgViewModel @Inject constructor(
         auth.signOut()
         signedIn.value = false
     }
+
+
 
 
 

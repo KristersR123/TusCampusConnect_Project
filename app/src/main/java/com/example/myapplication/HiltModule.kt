@@ -18,9 +18,6 @@ class HiltModule {
     @Provides
     fun provideAuthentication(): FirebaseAuth = Firebase.auth
 
-    @Provides
-    @ViewModelScoped
-    fun provideEventViewModel(): EventViewModel = EventViewModel()
 
     @Provides
     @ViewModelScoped

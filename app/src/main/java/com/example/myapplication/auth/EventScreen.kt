@@ -43,13 +43,8 @@ import java.util.*
 fun EventScreen(navController: NavController, vm: EventViewModel) {
     var eventName by remember { mutableStateOf("") }
     var eventDateTime by remember { mutableStateOf<Date?>(null) }
-    var events by remember { mutableStateOf(emptyList<Pair<String, String>>()) } // List to store events
 
-    val user = FirebaseAuth.getInstance().currentUser
-    val userId = user?.uid
-    val eventsCollection = userId?.let {
-        FirebaseFirestore.getInstance().collection("users").document(it).collection("events")
-    }
+
 
     Box(
         modifier = Modifier
@@ -115,10 +110,10 @@ fun EventScreen(navController: NavController, vm: EventViewModel) {
             }
 
             // Display saved events
-            val events by vm.events.collectAsState()
-            if (events.isNotEmpty()) {
+            val userEvents by vm.events.collectAsState()
+            if (userEvents.isNotEmpty()) {
                 Column {
-                    events.forEach { (name, date) ->
+                    userEvents.forEach { (name, date) ->
                         EventListItem(name = name, date = date)
                         Spacer(modifier = Modifier.height(8.dp))
                     }
